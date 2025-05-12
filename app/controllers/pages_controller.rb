@@ -9,7 +9,7 @@ class PagesController < ApplicationController
     if params[:search].present?
       search_term = "%#{params[:search].downcase}%"
       @locations = @locations.where("LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(address) LIKE ?", 
-                                    search_term, search_term, search_term)
+                                   search_term, search_term, search_term)
     end
   end
   

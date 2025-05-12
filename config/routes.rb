@@ -9,8 +9,6 @@ Rails.application.routes.draw do
   # API pour les localisations
   namespace :api do
     namespace :v1 do
-      get "locations/index"
-      get "locations/show"
       resources :locations, only: [:index, :show]
     end
   end

@@ -1,4 +1,6 @@
-// app/javascript/application.js
-import '@hotwired/turbo-rails'
-import './controllers'
-import 'leaflet/dist/leaflet.css'
+// app/javascript/controllers/application.js
+import { Application } from '@hotwired/stimulus'
+
+const application = Application.start()
+
+export { application }

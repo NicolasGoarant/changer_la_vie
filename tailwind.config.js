@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
       './app/views/**/*.{erb,html}',
@@ -7,7 +8,7 @@ module.exports = {
     theme: {
       extend: {
         colors: {
-          primary: '#22c55e', // correspond au vert-600 de Tailwind
+          primary: '#16a34a', // correspond à green-600
         },
       },
     },

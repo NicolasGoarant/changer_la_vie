@@ -2,26 +2,26 @@
   "name": "app",
   "private": true,
   "scripts": {
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
-    "build:css": "npx @tailwindcss/cli -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify"
+    "build": "node esbuild.config.js",
+    "build:css": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.13",
     "@rails/request.js": "^0.0.12",
-    "@tailwindcss/aspect-ratio": "^0.4.2",
-    "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/typography": "^0.5.16",
-    "autoprefixer": "^10.4.21",
+    "@tailwindcss/aspect-ratio": "^0.4.0",
+    "@tailwindcss/forms": "^0.5.4",
+    "@tailwindcss/typography": "^0.5.9",
+    "autoprefixer": "^10.4.14",
     "esbuild": "^0.25.4",
     "esbuild-plugin-css-modules": "^0.3.0",
-    "esbuild-plugin-url": "^0.0.1",
     "leaflet": "^1.9.4",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.6"
+    "postcss": "^8.4.27",
+    "tailwindcss": "^3.3.0"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.1.6"
+    "esbuild-plugin-copy": "^2.1.1"
   }
 }
+
