@@ -6,13 +6,20 @@
     "build:css": "npx @tailwindcss/cli -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.13",
     "@rails/request.js": "^0.0.12",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.4",
     "esbuild-plugin-css-modules": "^0.3.0",
     "esbuild-plugin-url": "^0.0.1",
-    "leaflet": "^1.9.4"
+    "leaflet": "^1.9.4",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.6"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.6"

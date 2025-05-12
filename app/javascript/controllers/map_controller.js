@@ -1,57 +1,67 @@
-// app/javascript/controllers/map_controller.js
-import { Controller } from '@hotwired/stimulus'
-import L from 'leaflet'
+import { Controller } from "@hotwired/stimulus"
+import L from "leaflet"
 
 export default class extends Controller {
-  static targets = ['container']
-  
+  static targets = ["container"]
+
   connect() {
-    this.initializeMap()
-    this.fetchLocations()
-  }
-  
-  initializeMap() {
-    this.map = L.map(this.containerTarget).setView([48.8566, 2.3522], 12)
+    // Créer la carte dans l'élément conteneur
+    this.map = L.map(this.element).setView([48.8566, 2.3522], 12);
     
-    L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-      attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>',
-      maxZoom: 20
-    }).addTo(this.map)
+    // Ajouter une couche de carte Google Maps-style
+    L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+    }).addTo(this.map);
+    
+    // Charger les localisations
+    this.loadLocations();
+    
+    // Stocker les marqueurs
+    this.markers = {};
   }
   
-  fetchLocations() {
+  loadLocations() {
     fetch('/api/v1/locations')
       .then(response => response.json())
       .then(data => {
-        this.addMarkersToMap(data)
+        this.addMarkersToMap(data);
       })
+      .catch(error => {
+        console.error("Erreur de chargement des localisations:", error);
+      });
   }
   
   addMarkersToMap(locations) {
     locations.forEach(location => {
-      const lat = parseFloat(location.latitude)
-      const lng = parseFloat(location.longitude)
-      
-      const marker = this.createMarker(lat, lng, location.category)
-      marker.addTo(this.map)
-      
-      marker.bindPopup(this.createPopupContent(location))
-    })
+      const marker = this.createMarker(location);
+      this.markers[location.id] = marker;
+      marker.addTo(this.map);
+    });
   }
   
-  createMarker(lat, lng, category) {
-    const markerColors = {
+  createMarker(location) {
+    const lat = parseFloat(location.latitude);
+    const lng = parseFloat(location.longitude);
+    
+    if (isNaN(lat) || isNaN(lng)) {
+      console.warn(`Coordonnées invalides pour ${location.name}`);
+      return null;
+    }
+    
+    const categoryColors = {
       'charity': '#4F46E5',
       'education': '#F59E0B',
       'health': '#EF4444',
-      'entrepreneurship': '#4F46E5',
-      'community': '#F59E0B'
-    }
+      'entrepreneurship': '#10B981',
+      'community': '#8B5CF6'
+    };
     
-    const color = markerColors[category] || '#6B7280'
+    const color = categoryColors[location.category] || '#6B7280';
     
     const icon = L.divIcon({
-      className: 'custom-marker-icon',
+      className: `marker-${location.category}`,
       html: `
         <div style="
           position: relative;
@@ -75,17 +85,29 @@ export default class extends Controller {
       iconSize: [30, 44],
       iconAnchor: [15, 44],
       popupAnchor: [0, -44]
-    })
+    });
     
-    return L.marker([lat, lng], { icon })
+    const marker = L.marker([lat, lng], { icon });
+    
+    // Créer une popup avec du contenu HTML
+    const popupContent = `
+      <div class="text-center p-2">
+        <h3 class="font-semibold text-base">${location.name}</h3>
+        <p class="text-xs text-gray-500">${location.address}</p>
+        <a href="/locations/${location.id}" class="text-xs text-blue-600 hover:underline">Voir détails</a>
+      </div>
+    `;
+    
+    marker.bindPopup(popupContent);
+    return marker;
   }
   
-  createPopupContent(location) {
-    return `
-      <div class='text-center'>
-        <h3 class='font-semibold'>${location.name}</h3>
-        <p class='text-xs'>${location.address}</p>
-      </div>
-    `
+  // Méthode pour centrer la carte sur un emplacement spécifique
+  focusLocation(locationId) {
+    const marker = this.markers[locationId];
+    if (marker) {
+      this.map.setView(marker.getLatLng(), 15);
+      marker.openPopup();
+    }
   }
 }
