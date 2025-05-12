@@ -1,7 +1,6 @@
 import '@hotwired/turbo-rails'
 import { Application } from '@hotwired/stimulus'
-import { definitionsFromContext } from '@hotwired/stimulus-webpack-helpers'
+import MapController from './map_controller'
 
 const application = Application.start()
-const context = require.context('./controllers', true, /\.js$/)
-application.load(definitionsFromContext(context))
+application.register('map', MapController)
