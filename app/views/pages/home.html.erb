@@ -1,0 +1,10 @@
+<h1>Pages#home</h1>
+<p>Find me in app/views/pages/home.html.erb</p>
+
+<h1>Bienvenue sur Changer la vie</h1>
+<div id="map-container" data-controller="map" style="height: 600px;"></div>
+
+
+<script>
+  window.locationsData = <%= raw(@locations.to_json(only: [:id, :name, :latitude, :longitude, :address])) %>;
+</script>
