@@ -14,3 +14,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 // Pas besoin de rendre MapLibre global : le controller s’en charge
 
 
+/* app/javascript/stylesheets/application.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

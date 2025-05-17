@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* MapLibre GL */
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+/* FontAwesome (icônes) */
+@import "@fortawesome/fontawesome-free/css/all.css";
+
+/* Définir une hauteur fixe pour la carte */
+#map-container,
+.maplibre-map,
+.maplibregl-canvas {
+  height: 500px; /* ou 60vh, adapte selon besoin */
+  max-height: 80vh;
+  width: 100%;
+}
+
+/* Empêche les scrolls désagréables liés à la carte */
+.maplibregl-canvas {
+  touch-action: pan-x pan-y;
+}
+
+/* Empêche le débordement horizontal */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Optionnel : éviter les marges inutiles */
+body {
+  margin: 0;
+}
+
+  
