@@ -1,4 +1,3 @@
-// app/javascript/controllers/map_controller.js
 import { Controller } from "@hotwired/stimulus"
 import maplibregl from "maplibre-gl"
 
@@ -9,12 +8,27 @@ export default class extends Controller {
     this.map = new maplibregl.Map({
       container: this.element,
       style: "https://api.maptiler.com/maps/streets/style.json?key=eAYYn9DbCTTjSFCqV2Oz",
-
-      center: [2.3522, 48.8566], // Paris
+      center: [2.3522, 48.8566],
       zoom: 12
     })
 
     this.map.addControl(new maplibregl.NavigationControl(), 'top-right')
+
+    // Désactivation des comportements intrusifs
+    this.map.scrollZoom.disable()
+    this.map.boxZoom.disable()
+    this.map.dragRotate.disable()
+    this.map.touchZoomRotate.disable()
+
+    // Réactive le zoom scroll seulement quand la souris est sur la carte
+    this.map.getCanvas().addEventListener('mouseenter', () => {
+      this.map.scrollZoom.enable()
+    })
+
+    this.map.getCanvas().addEventListener('mouseleave', () => {
+      this.map.scrollZoom.disable()
+    })
+
     this.markers = {}
     this.loadLocations()
   }
@@ -50,6 +64,7 @@ export default class extends Controller {
     }
   }
 }
+
 
 
 
