@@ -1,56 +1,229 @@
-<div class="flex flex-col md:flex-row h-screen">
-  <!-- Sidebar -->
-  <aside class="w-full md:w-1/3 lg:w-1/4 bg-white p-4 border-r border-gray-200 overflow-y-auto">
-    <h1 class="text-2xl font-bold text-teal-600 mb-4">Changer la vie</h1>
+<style>
+  /* Styles pour la mise en page principale */
+  .home-layout {
+    margin-bottom: 40px;
+  }
+  
+  @media (min-width: 768px) {
+    .home-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+    }
+  }
+  
+  .sidebar {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+  
+  .search-container {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+  .search-container input {
+    width: 100%;
+    padding: 10px 10px 10px 35px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+  }
+  
+  .filters-title {
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+  
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .filter-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #10b981;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .filter-btn:hover {
+    background-color: #0d9668;
+  }
+  
+  .filter-btn.active {
+    background-color: #0d9668;
+    font-weight: 600;
+  }
+  
+  .map-container {
+    height: 400px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* Styles pour la liste des lieux */
+  .locations-list {
+    margin-top: 30px;
+    display: grid;
+    gap: 20px;
+  }
+  
+  .location-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .location-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  }
+  
+  @media (min-width: 768px) {
+    .location-card {
+      flex-direction: row;
+    }
+    
+    .location-image {
+      width: 25%;
+      min-width: 200px;
+    }
+  }
+  
+  .location-image {
+    background-color: #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+  }
+  
+  .location-image i {
+    font-size: 48px;
+    color: #aaa;
+  }
+  
+  .location-content {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .location-title {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  
+  .location-address {
+    color: #666;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  
+  .location-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  
+  .discover-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #10b981;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  
+  .discover-btn:hover {
+    background-color: #0d9668;
+  }
+  
+  /* Style pour la carte quand elle est centrée sur un lieu spécifique */
+  .highlight-card {
+    border: 2px solid #10b981;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+</style>
 
-    <!-- Recherche -->
-    <form method="get" action="/" class="relative mb-4">
-      <input 
-        type="text" 
-        name="search" 
-        placeholder="Rechercher un lieu..." 
-        class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500"
-      >
-      <div class="absolute left-3 top-2.5 text-gray-400">
-        <i class="fas fa-search"></i>
+<div class="home-layout">
+  <div class="sidebar">
+    <!-- Barre de recherche -->
+    <div class="search-container">
+    <i class="fas fa-search search-icon"></i>
+    <%= form_with url: root_path, method: :get, local: true do |f| %>
+      <%= f.text_field :query, placeholder: "Rechercher...", value: params[:query], class: "search-input" %>
+      <%= hidden_field_tag :category, params[:category] if params[:category].present? %>
+    <% end %>
+  </div>
+    
+    <!-- Filtres -->
+    <h2 class="filters-title">Filtres</h2>
+    <div class="filters">
+      <a href="/?category=all" class="filter-btn <%= params[:category].blank? || params[:category] == 'all' ? 'active' : '' %>">Tous</a>
+      <a href="/?category=health" class="filter-btn <%= params[:category] == 'health' ? 'active' : '' %>">Santé</a>
+      <a href="/?category=education" class="filter-btn <%= params[:category] == 'education' ? 'active' : '' %>">Education</a>
+      <a href="/?category=social" class="filter-btn <%= params[:category] == 'social' ? 'active' : '' %>">Aide sociale</a>
+      <a href="/?category=environment" class="filter-btn <%= params[:category] == 'environment' ? 'active' : '' %>">Environnement</a>
+    </div>
+  </div>
+  
+  <!-- Carte interactive -->
+  <div class="map-container" id="map" data-controller="map"></div>
+</div>
+
+<!-- Liste des activités -->
+<div class="locations-list">
+  <% @locations.each do |location| %>
+    <div class="location-card <%= params[:highlight_id].to_i == location.id ? 'highlight-card' : '' %>" 
+         id="location-<%= location.id %>">
+      <div class="location-image">
+        <i class="fas fa-image"></i>
       </div>
-    </form>
-
-    <!-- Catégories -->
-    <h2 class="font-semibold text-lg mb-2">Catégories</h2>
-    <div class="flex flex-wrap gap-2 mb-4">
-      <% categories = {
-        "all" => ["Tout", "bg-teal-500"],
-        "charity" => ["Aide", "bg-pink-500"],
-        "education" => ["Éducation", "bg-yellow-500"],
-        "health" => ["Santé", "bg-blue-500"]
-      } %>
-
-      <% categories.each do |key, (label, color)| %>
-        <% active = params[:category] == key || (key == "all" && params[:category].blank?) %>
-        <%= link_to root_path(category: key == "all" ? nil : key), class: "px-3 py-1 rounded-full text-sm font-medium #{active ? "#{color} text-white" : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" do %>
-          <%= label %>
-        <% end %>
-      <% end %>
-    </div>
-
-    <!-- Liste des lieux -->
-    <div class="space-y-3">
-      <% @locations.each do |location| %>
-        <div class="bg-white border rounded-lg p-3 shadow-sm hover:shadow-md cursor-pointer" data-location-id="<%= location.id %>">
-          <h3 class="font-semibold text-gray-800"><%= location.name %></h3>
-          <p class="text-sm text-gray-500"><%= location.address %></p>
+      <div class="location-content">
+        <div>
+          <h2 class="location-title"><%= location.name %></h2>
+          <p class="location-address"><%= location.address %></p>
+          <% if location.description.present? %>
+            <p><%= truncate(location.description, length: 150) %></p>
+          <% end %>
         </div>
-      <% end %>
+        <div class="location-actions">
+          <%= link_to "Découvrir", "?highlight_id=#{location.id}#location-#{location.id}", class: "discover-btn" %>
+        </div>
+      </div>
     </div>
-  </aside>
-
-  <!-- Carte -->
-  <main class="flex-1 relative">
-
-<div class="hidden md:block md:w-2/3 lg:w-3/4" data-controller="map" data-map-target="container" style="height: calc(100vh - 80px); position: relative;"></div>
-
-
-
-
-
+  <% end %>
+</div>

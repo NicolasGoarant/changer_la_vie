@@ -1,34 +1,116 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Changer La Vie" %></title>
+    <title>Changer la vie - Opportunités pour s'engager et faire la différence</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- FontAwesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    
+    <!-- Leaflet JS doit être chargé avant l'application JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0fdf4; /* vert très clair */
+      }
+      
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      
+      header {
+        background-color: white;
+        padding: 15px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+      }
+      
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .site-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 0;
+      }
+      
+      .site-title a {
+        color: #333;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+      
+      .logo-circle {
+        width: 30px;
+        height: 30px;
+        background-color: #10b981;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        color: white;
+        font-size: 18px;
+      }
+      
+      nav {
+        display: flex;
+        gap: 20px;
+      }
+      
+      nav a {
+        color: #333;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      
+      nav a:hover {
+        color: #10b981;
+      }
+    </style>
   </head>
 
   <body>
-  <header class="bg-white shadow-sm border-b p-4">
-  <div class="max-w-7xl mx-auto text-xl font-bold text-teal-600">
-    🌍 Changer la Vie
-  </div>
-</header>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <h1 class="site-title">
+            <%= link_to root_path do %>
+              <div class="logo-circle"><i class="fas fa-plus"></i></div>
+              Changer la vie
+            <% end %>
+          </h1>
+          <nav>
+            <%= link_to "Accueil", root_path %>
+            <%= link_to "Catégories", "#" %>
+            <%= link_to "À propos", mission_path %>
+            <%= link_to "Contact", contact_path %>
+          </nav>
+        </div>
+      </div>
+    </header>
 
-    <%= yield %>
+    <main class="container">
+      <%= yield %>
+    </main>
   </body>
 </html>

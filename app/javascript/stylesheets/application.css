@@ -2,33 +2,103 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ====== Dépendances externes ====== */
-@import "maplibre-gl/dist/maplibre-gl.css";
-@import "@fortawesome/fontawesome-free/css/all.css";
-
-/* ====== Carte MapLibre ====== */
-#map-container,
-.maplibre-map,
-.maplibregl-canvas {
-  height: 500px;
-  max-height: 80vh;
-  width: 100%;
-  touch-action: pan-x pan-y; /* évite scroll infini mais permet zoom */
+@layer components {
+  /* Couleurs primaires de l'application */
+  .text-primary {
+    @apply text-green-500;
+  }
+  
+  .bg-primary {
+    @apply bg-green-500;
+  }
+  
+  .border-primary {
+    @apply border-green-500;
+  }
+  
+  /* Styles pour le fond de page */
+  body {
+    @apply bg-green-50;
+  }
+  
+  /* Styles pour les cartes et conteneurs */
+  .card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden;
+  }
+  
+  /* Styles pour les boutons */
+  .btn-primary {
+    @apply bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors;
+  }
+  
+  .btn-filter {
+    @apply bg-green-500 text-white px-4 py-2 rounded-full font-medium hover:bg-green-600 transition-colors;
+  }
+  
+  /* Styles pour les filtres */
+  .filter-container {
+    @apply flex flex-wrap gap-2;
+  }
+  
+  /* Styles pour Leaflet */
+  .leaflet-popup-content-wrapper {
+    @apply rounded-lg shadow-lg;
+  }
+  
+  .leaflet-popup-tip {
+    @apply bg-white;
+  }
+  
+  .leaflet-popup-content {
+    @apply p-0 m-0;
+  }
+  
+  /* Marqueurs personnalisés */
+  .custom-marker {
+    background: transparent;
+    border: none;
+  }
+  
+  .marker-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #10b981;  /* vert-500 */
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Correction de la taille de la carte */
+  [data-controller="map"] {
+    min-height: 400px;
+    @apply rounded-lg overflow-hidden;
+  }
+  
+  /* Styles pour les cartes d'activités */
+  .location-card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden mb-6;
+  }
+  
+  .location-card-content {
+    @apply p-6;
+  }
+  
+  .location-image {
+    @apply w-full h-full object-cover;
+    min-height: 160px;
+  }
+  
+  /* Styles pour les contrôles de la carte */
+  .leaflet-bar a {
+    @apply flex items-center justify-center;
+  }
+  
+  /* Pour la recherche */
+  .search-input {
+    @apply w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500;
+  }
 }
-
-/* ====== Base layout ====== */
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  height: 100%;
-  font-family: 'Inter', sans-serif;
-}
-
-/* ====== Comportement fluide ====== */
-* {
-  scroll-behavior: smooth;
-  transition: all 0.2s ease-in-out;
-}
-
  
